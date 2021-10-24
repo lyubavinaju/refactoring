@@ -6,16 +6,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import ru.akirakozov.sd.refactoring.dao.ProductDAO;
+import ru.akirakozov.sd.refactoring.html.HtmlPrinter;
 import ru.akirakozov.sd.refactoring.servlet.queryCommands.QueryCommandEnum;
 
 /**
  * @author akirakozov
  */
-public class QueryServlet extends HttpServlet {
-    private final ProductDAO productDAO;
-
-    public QueryServlet(ProductDAO productDAO) {
-        this.productDAO = productDAO;
+public class QueryServlet extends BaseServlet {
+    public QueryServlet(ProductDAO productDAO, HtmlPrinter htmlPrinter) {
+        super(productDAO, htmlPrinter);
     }
 
     @Override
@@ -23,7 +22,7 @@ public class QueryServlet extends HttpServlet {
         String command = request.getParameter("command");
         QueryCommandEnum commandEnum =
             Enums.getIfPresent(QueryCommandEnum.class, command.toUpperCase(Locale.ROOT)).or(QueryCommandEnum.DEFAULT);
-        commandEnum.runCommand(request, response, productDAO);
+        commandEnum.runCommand(request, response, productDAO, htmlPrinter);
         response.setContentType("text/html");
         response.setStatus(HttpServletResponse.SC_OK);
     }

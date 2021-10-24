@@ -2,24 +2,23 @@ package ru.akirakozov.sd.refactoring.servlet.queryCommands;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import ru.akirakozov.sd.refactoring.dao.ProductDAO;
 import ru.akirakozov.sd.refactoring.entity.Product;
+import ru.akirakozov.sd.refactoring.html.HtmlPrinter;
 
 public enum QueryCommandEnum {
     MAX() {
         @Override
         public void runCommand(HttpServletRequest request, HttpServletResponse response,
-                               ProductDAO productDAO) {
+                               ProductDAO productDAO, HtmlPrinter htmlPrinter) {
             try {
                 Product product = productDAO.findMaxByPrice();
-                response.getWriter().println("<html><body>");
-                response.getWriter().println("<h1>Product with max price: </h1>");
-                if (product != null) {
-                    response.getWriter().println(product.getName() + "\t" + product.getPrice() + "</br>");
-                }
-                response.getWriter().println("</body></html>");
+                String header = "Product with max price: ";
+                String text = htmlPrinter.getProductsHtml(List.of(product));
+                htmlPrinter.printHtml(response.getWriter(), header, text);
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
             }
@@ -28,15 +27,12 @@ public enum QueryCommandEnum {
     MIN {
         @Override
         public void runCommand(HttpServletRequest request, HttpServletResponse response,
-                               ProductDAO productDAO) {
+                               ProductDAO productDAO, HtmlPrinter htmlPrinter) {
             try {
                 Product product = productDAO.findMinByPrice();
-                response.getWriter().println("<html><body>");
-                response.getWriter().println("<h1>Product with min price: </h1>");
-                if (product != null) {
-                    response.getWriter().println(product.getName() + "\t" + product.getPrice() + "</br>");
-                }
-                response.getWriter().println("</body></html>");
+                String header = "Product with min price: ";
+                String text = htmlPrinter.getProductsHtml(List.of(product));
+                htmlPrinter.printHtml(response.getWriter(), header, text);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -45,15 +41,11 @@ public enum QueryCommandEnum {
     SUM {
         @Override
         public void runCommand(HttpServletRequest request, HttpServletResponse response,
-                               ProductDAO productDAO) {
+                               ProductDAO productDAO, HtmlPrinter htmlPrinter) {
             try {
                 Integer sum = productDAO.sum();
-                response.getWriter().println("<html><body>");
-                response.getWriter().println("Summary price: ");
-                if (sum != null) {
-                    response.getWriter().println(sum);
-                }
-                response.getWriter().println("</body></html>");
+                String text = "Summary price: " + (sum == null ? "" : sum);
+                htmlPrinter.printHtml(response.getWriter(), text);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -62,15 +54,11 @@ public enum QueryCommandEnum {
     COUNT {
         @Override
         public void runCommand(HttpServletRequest request, HttpServletResponse response,
-                               ProductDAO productDAO) {
+                               ProductDAO productDAO, HtmlPrinter htmlPrinter) {
             try {
                 Integer count = productDAO.count();
-                response.getWriter().println("<html><body>");
-                response.getWriter().println("Number of products: ");
-                if (count != null) {
-                    response.getWriter().println(count);
-                }
-                response.getWriter().println("</body></html>");
+                String text = "Number of products: " + (count == null ? "" : count);
+                htmlPrinter.printHtml(response.getWriter(), text);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -79,9 +67,10 @@ public enum QueryCommandEnum {
     DEFAULT {
         @Override
         public void runCommand(HttpServletRequest request, HttpServletResponse response,
-                               ProductDAO productDAO) {
+                               ProductDAO productDAO, HtmlPrinter htmlPrinter) {
             try {
-                response.getWriter().println("Unknown command: " + request.getParameter("command"));
+                htmlPrinter.printText(response.getWriter(),
+                    "Unknown command: " + request.getParameter("command"));
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
             }
@@ -89,5 +78,5 @@ public enum QueryCommandEnum {
     };
 
     public abstract void runCommand(HttpServletRequest request, HttpServletResponse response,
-                                    ProductDAO productDAO);
+                                    ProductDAO productDAO, HtmlPrinter htmlPrinter);
 }

@@ -11,6 +11,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import ru.akirakozov.sd.refactoring.dao.ProductDAO;
+import ru.akirakozov.sd.refactoring.html.HtmlPrinter;
 
 public abstract class BaseServletTest {
 
@@ -22,17 +23,19 @@ public abstract class BaseServletTest {
     protected StringWriter stringWriter;
     protected PrintWriter printWriter;
     protected ProductDAO productDAO;
+    protected HtmlPrinter htmlPrinter;
 
     private AutoCloseable closeable;
 
     @BeforeClass
     public void beforeClass() {
+        htmlPrinter = new HtmlPrinter();
         productDAO = new ProductDAO();
         productDAO.createTable();
     }
 
     @BeforeMethod
-    public void setUp() {
+    public final void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
         stringWriter = new StringWriter();
         printWriter = new PrintWriter(stringWriter);

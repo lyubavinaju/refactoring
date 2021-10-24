@@ -20,7 +20,6 @@ public abstract class BaseServletTest {
 
     protected StringWriter stringWriter;
     protected PrintWriter printWriter;
-    protected Connection connection;
     protected ProductDAO productDAO;
 
     private AutoCloseable closeable;
@@ -31,15 +30,13 @@ public abstract class BaseServletTest {
 
         stringWriter = new StringWriter();
         printWriter = new PrintWriter(stringWriter);
-        connection = ProductConnectionSource.instance().createConnection();
-        productDAO = new ProductDAO(connection);
+        productDAO = new ProductDAO();
         productDAO.deleteAll();
     }
 
     @AfterMethod
     public void tearDown() throws Exception {
         productDAO.deleteAll();
-        connection.close();
         printWriter.close();
         stringWriter.close();
 

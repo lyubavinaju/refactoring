@@ -48,7 +48,9 @@ public class QueryDataProvider {
                 product4,
                 product5,
                 product5
-            ), "Summary price: " + 2400}
+            ), "Summary price: " + 2400},
+            {"sum", List.of(), "Summary price: 0"},
+            {"count", List.of(), "Number of products: 0"}
         };
     }
 

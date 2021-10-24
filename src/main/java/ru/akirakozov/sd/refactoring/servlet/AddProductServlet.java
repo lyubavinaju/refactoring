@@ -17,7 +17,7 @@ public class AddProductServlet extends BaseServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+    protected void doGetImpl(HttpServletRequest request, HttpServletResponse response) {
         String name = request.getParameter("name");
         int price = Integer.parseInt(request.getParameter("price"));
 
@@ -27,7 +27,5 @@ public class AddProductServlet extends BaseServlet {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-        response.setContentType("text/html");
-        response.setStatus(HttpServletResponse.SC_OK);
     }
 }

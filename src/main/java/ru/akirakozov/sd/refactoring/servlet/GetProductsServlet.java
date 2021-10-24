@@ -18,7 +18,7 @@ public class GetProductsServlet extends BaseServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+    protected void doGetImpl(HttpServletRequest request, HttpServletResponse response) {
         List<Product> products = productDAO.findAll();
         try {
             String text = htmlPrinter.getProductsHtml(products);
@@ -26,8 +26,5 @@ public class GetProductsServlet extends BaseServlet {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-
-        response.setContentType("text/html");
-        response.setStatus(HttpServletResponse.SC_OK);
     }
 }

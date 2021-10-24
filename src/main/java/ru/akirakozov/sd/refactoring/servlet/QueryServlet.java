@@ -2,7 +2,6 @@ package ru.akirakozov.sd.refactoring.servlet;
 
 import com.google.common.base.Enums;
 import java.util.Locale;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import ru.akirakozov.sd.refactoring.dao.ProductDAO;
@@ -18,12 +17,10 @@ public class QueryServlet extends BaseServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+    protected void doGetImpl(HttpServletRequest request, HttpServletResponse response) {
         String command = request.getParameter("command");
         QueryCommandEnum commandEnum =
             Enums.getIfPresent(QueryCommandEnum.class, command.toUpperCase(Locale.ROOT)).or(QueryCommandEnum.DEFAULT);
         commandEnum.runCommand(request, response, productDAO, htmlPrinter);
-        response.setContentType("text/html");
-        response.setStatus(HttpServletResponse.SC_OK);
     }
 }

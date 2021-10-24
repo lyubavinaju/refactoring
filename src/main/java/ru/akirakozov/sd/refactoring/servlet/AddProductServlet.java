@@ -16,7 +16,7 @@ public class AddProductServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String name = request.getParameter("name");
-        long price = Long.parseLong(request.getParameter("price"));
+        int price = Integer.parseInt(request.getParameter("price"));
 
         try {
             try (Connection c = DriverManager.getConnection("jdbc:sqlite:test.db")) {

@@ -17,7 +17,7 @@ public enum QueryCommandEnum {
             try {
                 Product product = productDAO.findMaxByPrice();
                 String header = "Product with max price: ";
-                String text = htmlPrinter.getProductsHtml(List.of(product));
+                String text = product == null ? "" : htmlPrinter.getProductsHtml(List.of(product));
                 htmlPrinter.printHtml(response.getWriter(), header, text);
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
@@ -31,7 +31,7 @@ public enum QueryCommandEnum {
             try {
                 Product product = productDAO.findMinByPrice();
                 String header = "Product with min price: ";
-                String text = htmlPrinter.getProductsHtml(List.of(product));
+                String text = product == null ? "" : htmlPrinter.getProductsHtml(List.of(product));
                 htmlPrinter.printHtml(response.getWriter(), header, text);
             } catch (IOException e) {
                 throw new RuntimeException(e);

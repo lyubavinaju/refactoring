@@ -23,7 +23,7 @@ public class AddProductServletTest extends BaseServletTest {
 
     @BeforeMethod
     public void initServlet() {
-        addProductServlet = new AddProductServlet();
+        addProductServlet = new AddProductServlet(productDAO);
     }
 
     @Test(dataProvider = "addProductPositiveData", dataProviderClass = AddProductDataProvider.class)

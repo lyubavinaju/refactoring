@@ -24,7 +24,7 @@ public class GetProductsServletTest extends BaseServletTest {
 
     @BeforeMethod
     public void initServlet() {
-        getProductsServlet = new GetProductsServlet();
+        getProductsServlet = new GetProductsServlet(productDAO);
     }
 
     @Test(dataProvider = "getProductsData", dataProviderClass = GetProductsDataProvider.class)

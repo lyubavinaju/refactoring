@@ -1,40 +1,36 @@
 package ru.akirakozov.sd.refactoring.servlet;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.util.List;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import ru.akirakozov.sd.refactoring.dao.ProductDAO;
+import ru.akirakozov.sd.refactoring.entity.Product;
 
 /**
  * @author akirakozov
  */
 public class GetProductsServlet extends HttpServlet {
+    private final ProductDAO productDAO;
+
+    public GetProductsServlet(ProductDAO productDAO) {
+        this.productDAO = productDAO;
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+        List<Product> products = productDAO.findAll();
         try {
-            try (Connection c = DriverManager.getConnection("jdbc:sqlite:test.db")) {
-                Statement stmt = c.createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT * FROM PRODUCT");
-                response.getWriter().println("<html><body>");
-
-                while (rs.next()) {
-                    String  name = rs.getString("name");
-                    int price  = rs.getInt("price");
-                    response.getWriter().println(name + "\t" + price + "</br>");
-                }
-                response.getWriter().println("</body></html>");
-
-                rs.close();
-                stmt.close();
+            response.getWriter().println("<html><body>");
+            for (Product product : products
+            ) {
+                response.getWriter().println(product.getName() + "\t" + product.getPrice() + "</br>");
             }
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            response.getWriter().println("</body></html>");
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
         }
 
         response.setContentType("text/html");

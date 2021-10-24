@@ -24,7 +24,7 @@ public class QueryServletTest extends BaseServletTest {
 
     @BeforeMethod
     public void initServlet() {
-        queryServlet = new QueryServlet();
+        queryServlet = new QueryServlet(productDAO);
     }
 
     @Test(dataProvider = "queryData", dataProviderClass = QueryDataProvider.class)

@@ -2,17 +2,18 @@ package ru.akirakozov.sd.refactoring.servlet;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.sql.Connection;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import ru.akirakozov.sd.refactoring.dao.ProductDAO;
-import ru.akirakozov.sd.refactoring.database.ProductConnectionSource;
 
 public abstract class BaseServletTest {
+
     @Mock
     protected HttpServletRequest request;
     @Mock
@@ -24,13 +25,17 @@ public abstract class BaseServletTest {
 
     private AutoCloseable closeable;
 
+    @BeforeClass
+    public void beforeClass() {
+        productDAO = new ProductDAO();
+        productDAO.createTable();
+    }
+
     @BeforeMethod
     public void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
-
         stringWriter = new StringWriter();
         printWriter = new PrintWriter(stringWriter);
-        productDAO = new ProductDAO();
         productDAO.deleteAll();
     }
 
@@ -41,5 +46,10 @@ public abstract class BaseServletTest {
         stringWriter.close();
 
         closeable.close();
+    }
+
+    @AfterClass
+    public void afterClass() {
+        productDAO.dropTable();
     }
 }
